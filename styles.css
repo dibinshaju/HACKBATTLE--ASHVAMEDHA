@@ -87,6 +87,9 @@ h1 {
   gap: 12px;
   margin-bottom: 8px;
 }
+.brand .lang { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; }
+.brand .lang label { color: var(--muted); font-weight: 600; }
+.brand .lang select { background: #0f1630; color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; }
 .brand .logo {
   height: 40px;
   width: 40px;

@@ -5,12 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Login</title>
   <link rel="stylesheet" href="styles.css">
+    <link rel="prefetch" href="dashboard.html">
+    <link rel="preload" href="dashboard.css" as="style">
+    <link rel="preload" href="dashboard.js" as="script">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <main class="container">
+   
     <div class="mobile-graph" aria-hidden="true"></div>
     <section class="card" aria-labelledby="login-title">
       <header class="brand">
@@ -22,41 +26,48 @@
           </svg>
         </div>
         <div class="brand-text">
-          <h1 id="login-title" class="app-title">Finance Tracker</h1>
-          <p class="subtitle">Track budgets, visualize spend, and hit your goals.</p>
+          <h1 id="login-title" class="app-title" data-i18n="app_name">Finance Tracker</h1>
+          <p class="subtitle" id="subtitle" data-i18n="subtitle">Track budgets, visualize spend, and hit your goals.</p>
+        </div>
+        <div class="lang">
+          <label for="lang-select" id="lang-label" data-i18n="language">Language</label>
+          <select id="lang-select" aria-labelledby="lang-label">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+          </select>
         </div>
       </header>
 
       <div class="oauth">
         <button type="button" class="btn oauth-btn google" id="oauth-google" aria-label="Continue with Google">
           <span class="icon" aria-hidden="true">G</span>
-          <span>Continue with Google</span>
+          <span id="oauth-google-text" data-i18n="continue_google">Continue with Google</span>
         </button>
         <button type="button" class="btn oauth-btn microsoft" id="oauth-microsoft" aria-label="Continue with Microsoft">
           <span class="icon" aria-hidden="true"></span>
-          <span>Continue with Microsoft</span>
+          <span id="oauth-microsoft-text" data-i18n="continue_microsoft">Continue with Microsoft</span>
         </button>
       </div>
 
       <div class="divider" role="separator" aria-label="or">
-        <span>or</span>
+        <span id="divider-or" data-i18n="or">or</span>
       </div>
 
       <form id="login-form" novalidate>
         <div class="field">
-          <label for="email">Email</label>
+          <label for="email" id="label-email" data-i18n="email">Email</label>
           <input type="email" id="email" name="email" autocomplete="username" inputmode="email" required aria-describedby="email-hint email-error">
-          <p class="hint" id="email-hint">Use your work email address.</p>
+          <p class="hint" id="email-hint" data-i18n="email_hint">Use your work email address.</p>
           <p class="error" id="email-error" role="alert" aria-live="polite"></p>
         </div>
 
         <div class="field">
-          <label for="password">Password</label>
+          <label for="password" id="label-password" data-i18n="password">Password</label>
           <div class="password-wrapper">
             <input type="password" id="password" name="password" autocomplete="current-password" minlength="8" required aria-describedby="password-hint password-error">
-            <button type="button" id="toggle-password" class="ghost" aria-pressed="false" aria-controls="password">Show</button>
+            <button type="button" id="toggle-password" class="ghost" aria-pressed="false" aria-controls="password" data-i18n="show">Show</button>
           </div>
-          <p class="hint" id="password-hint">At least 8 characters.</p>
+          <p class="hint" id="password-hint" data-i18n="password_hint">At least 8 characters.</p>
           <p class="error" id="password-error" role="alert" aria-live="polite"></p>
           <div class="strength" aria-live="polite" id="password-strength" hidden>
             <div class="bars" aria-hidden="true">
@@ -69,14 +80,14 @@
         <div class="actions">
           <label class="checkbox">
             <input type="checkbox" id="remember" name="remember">
-            <span>Remember me</span>
+            <span id="remember-text" data-i18n="remember">Remember me</span>
           </label>
-          <button type="submit" id="submit" class="btn primary">Sign in</button>
+          <button type="submit" id="submit" class="btn primary" data-i18n="sign_in">Sign in</button>
         </div>
 
         <div class="links">
-          <a href="#" id="forgot">Forgot password?</a>
-          <a href="#" id="create-account">Create account</a>
+          <a href="#" id="forgot" data-i18n="forgot">Forgot password?</a>
+          <a href="#" id="create-account" data-i18n="create_account">Create account</a>
         </div>
 
         <div class="status" id="form-status" aria-live="polite"></div>
@@ -85,6 +96,7 @@
   </main>
 
   <script src="app.js" defer></script>
+  <script src="dashboard.js" defer></script>
   <noscript>
     JavaScript is disabled. The form will submit without client-side validation.
   </noscript>
