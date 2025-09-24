@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Goals • Finance Tracker</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">🎯</span>
+      <span class="name">Finance Tracker</span>
+    </div>
+    <nav>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="goals.html" aria-current="page">Budgets</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="goals-layout">
+      <aside class="card sidebar">
+        <h3>Budget Planner</h3>
+        <ol class="steps">
+          <li>Set your monthly spend limit.</li>
+          <li>Define a savings goal.</li>
+          <li>Track expenses on the dashboard.</li>
+          <li>Adjust as needed to hit targets.</li>
+        </ol>
+        <form id="goals-form">
+          <div class="row">
+            <label for="goal-budget">Monthly Budget (USD)</label>
+            <input type="number" id="goal-budget" min="0" step="0.01" placeholder="e.g., 2000">
+          </div>
+          <div class="row">
+            <label for="goal-savings">Savings Goal (USD)</label>
+            <input type="number" id="goal-savings" min="0" step="0.01" placeholder="e.g., 500">
+          </div>
+          <div class="row">
+            <label for="bank-balance">Current Bank Balance (USD)</label>
+            <input type="number" id="bank-balance" min="0" step="0.01" placeholder="e.g., 23480.22">
+          </div>
+          <div class="row actions">
+            <button type="submit" class="add">Save Goals</button>
+          </div>
+          <div class="status" id="goals-status" aria-live="polite"></div>
+        </form>
+      </aside>
+
+      <section class="card content">
+        <h3>Monthly Snapshot</h3>
+        <div class="kpis">
+          <div class="kpi">
+            <div class="kpi-label">This Month Spent</div>
+            <div class="kpi-value" id="kpi-month-spent">$0.00</div>
+            <div class="progress"><div class="bar" id="bar-budget"></div></div>
+            <div class="kpi-sub" id="kpi-budget-remaining">Remaining: $0.00</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Bank Balance</div>
+            <div class="kpi-value" id="kpi-balance">$0.00</div>
+            <div class="kpi-sub" id="kpi-to-goal">To reach savings goal: $0.00</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Last Month</div>
+            <div class="kpi-value" id="kpi-last-month">$0.00</div>
+            <div class="kpi-sub" id="kpi-trend">Trend: -</div>
+          </div>
+        </div>
+
+        <h4 style="margin-top:14px; color: var(--muted);">Recent This Month</h4>
+        <ul id="month-expenses" class="expense-list"></ul>
+      </section>
+    </div>
+  </main>
+
+  <script>
+  (function(){
+    const GOALS_KEY = 'ft_goals';
+    const BANK_KEY = 'ft_bank_balance';
+    const EXP_KEY = 'ft_expenses';
+    function loadGoals(){ try { return JSON.parse(localStorage.getItem(GOALS_KEY) || '{}'); } catch(_) { return {}; } }
+    function saveGoals(v){ try { localStorage.setItem(GOALS_KEY, JSON.stringify(v)); } catch(_) {} }
+    function loadBalance(){ try { return Number(localStorage.getItem(BANK_KEY) || 0); } catch(_) { return 0; } }
+    function saveBalance(v){ try { localStorage.setItem(BANK_KEY, String(v)); } catch(_) {} }
+    function loadExpenses(){ try { return JSON.parse(localStorage.getItem(EXP_KEY) || '[]'); } catch(_) { return []; } }
+    function fmt(n){ try { return new Intl.NumberFormat(undefined,{style:'currency',currency:'USD'}).format(n); } catch(_) { return `$${Number(n||0).toFixed(2)}`; } }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('goals-form');
+      const budget = document.getElementById('goal-budget');
+      const savings = document.getElementById('goal-savings');
+      const balance = document.getElementById('bank-balance');
+      const status = document.getElementById('goals-status');
+
+      // KPIs and list
+      const kMonth = document.getElementById('kpi-month-spent');
+      const kRemain = document.getElementById('kpi-budget-remaining');
+      const kBar = document.getElementById('bar-budget');
+      const kBal = document.getElementById('kpi-balance');
+      const kToGoal = document.getElementById('kpi-to-goal');
+      const kLast = document.getElementById('kpi-last-month');
+      const kTrend = document.getElementById('kpi-trend');
+      const ul = document.getElementById('month-expenses');
+
+      function render() {
+        const g = loadGoals();
+        const bal = loadBalance();
+        if (g.budget) budget.value = g.budget;
+        if (g.savings) savings.value = g.savings;
+        if (bal) balance.value = bal;
+
+        const items = loadExpenses();
+        const now = new Date();
+        const thisMonth = items.filter(it => { const d=new Date(it.date); return d.getFullYear()===now.getFullYear() && d.getMonth()===now.getMonth(); });
+        const prev = new Date(now.getFullYear(), now.getMonth()-1, 1);
+        const lastMonth = items.filter(it => { const d=new Date(it.date); return d.getFullYear()===prev.getFullYear() && d.getMonth()===prev.getMonth(); });
+
+        const spent = thisMonth.reduce((a,it)=>a+Number(it.amount||0),0);
+        const spentPrev = lastMonth.reduce((a,it)=>a+Number(it.amount||0),0);
+
+        // KPIs
+        kMonth.textContent = fmt(spent);
+        const budgetNum = Number(budget.value||0);
+        const remain = Math.max(0, budgetNum - spent);
+        kRemain.textContent = `Remaining: ${fmt(remain)}`;
+        const pct = budgetNum>0 ? Math.min(100, Math.round((spent/budgetNum)*100)) : 0;
+        kBar.style.width = pct + '%';
+
+        kBal.textContent = fmt(bal);
+        const toGoal = Math.max(0, Number(savings.value||0) - (bal));
+        kToGoal.textContent = `To reach savings goal: ${fmt(toGoal)}`;
+
+        kLast.textContent = fmt(spentPrev);
+        const trend = spentPrev===0 ? '-' : `${Math.sign(spent-spentPrev)>=0?'+':''}${((spent-spentPrev)/Math.max(1,spentPrev)*100).toFixed(1)}% MoM`;
+        kTrend.textContent = `Trend: ${trend}`;
+
+        // List
+        ul.innerHTML = '';
+        thisMonth.slice().reverse().forEach(it => {
+          const li=document.createElement('li');
+          li.className='month-item';
+          li.textContent = `${new Date(it.date).toLocaleDateString()} · ${it.category} · ${fmt(Number(it.amount||0))}`;
+          ul.appendChild(li);
+        });
+      }
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const b = Number(budget.value || 0);
+        const s = Number(savings.value || 0);
+        const bal = Number(balance.value || 0);
+        saveGoals({ budget: b, savings: s });
+        saveBalance(bal);
+        status.textContent = 'Goals saved.';
+        render();
+      });
+
+      render();
+    });
+  })();
+  </script>
+</body>
+</html>
+
+

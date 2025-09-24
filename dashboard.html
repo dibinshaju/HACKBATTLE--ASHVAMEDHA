@@ -18,13 +18,20 @@
     <nav>
       <a href="dashboard.html" aria-current="page" id="nav-dashboard">Dashboard</a>
       <a href="#" id="nav-accounts">Accounts</a>
-      <a href="#" id="nav-budgets">Budgets</a>
+      <a href="goals.html" id="nav-budgets">Budgets</a>
       <a href="#" id="nav-reports">Reports</a>
       <div class="lang">
         <label for="db-lang" id="db-lang-label">Language</label>
         <select id="db-lang">
           <option value="en">English</option>
           <option value="hi">हिन्दी</option>
+        </select>
+      </div>
+      <div class="currency">
+        <label for="db-currency" id="db-currency-label">Currency</label>
+        <select id="db-currency">
+          <option value="USD">USD $</option>
+          <option value="INR">INR ₹</option>
         </select>
       </div>
       <button id="logout" class="logout">Logout</button>
@@ -35,11 +42,14 @@
     <section class="summary">
       <div class="card">
         <h3 id="t-balance">Total Balance</h3>
-        <p class="value" id="total-balance">$23,480.22</p>
+        <p class="value" id="total-balance" data-usd="23480.22">$23,480.22</p>
       </div>
       <div class="card">
         <h3 id="t-monthly">Monthly Spend</h3>
-        <p class="value" id="monthly-spend">$3,214.55</p>
+        <div class="summary-row">
+          <p class="value" id="monthly-spend" data-usd="3214.55">$3,214.55</p>
+          <button id="btn-clear-expenses-top" class="btn-clear" title="Clear all expenses">Clear All</button>
+        </div>
       </div>
       <div class="card">
         <h3 id="t-savings">Savings Rate</h3>
@@ -54,6 +64,7 @@
       </div>
       <div class="card">
         <h3 id="t-line">Cash Flow (Last 12 Months)</h3>
+        <div id="lineLegend" class="legend"></div>
         <canvas id="lineChart" width="600" height="260" aria-label="Cash flow last 12 months" role="img"></canvas>
       </div>
     </section>
@@ -71,6 +82,7 @@
             <select id="exp-category" required>
               <option value="Food">Food</option>
               <option value="Travel">Travel</option>
+              <option value="Health">Health</option>
               <option value="Bills">Bills</option>
               <option value="Shopping">Shopping</option>
               <option value="Other">Other</option>
@@ -91,8 +103,18 @@
         </form>
       </div>
       <div class="card">
-        <h3 id="t-recent">Recent Expenses</h3>
+        <div class="card-head">
+          <h3 id="t-recent">Recent Expenses</h3>
+        </div>
+        <div class="month-clear">
+          <label for="clear-month">Clear specific month</label>
+          <select id="clear-month"></select>
+          <button id="btn-clear-month" class="btn-clear">Clear Month</button>
+          <span class="last-added" id="last-added">Last: $0.00</span>
+          <span class="month-total" id="month-total">Total: $0.00</span>
+        </div>
         <ul id="expense-list" class="expense-list" aria-live="polite"></ul>
+        <div class="expense-total" id="expense-total">Total: $0.00</div>
       </div>
     </section>
   </main>
