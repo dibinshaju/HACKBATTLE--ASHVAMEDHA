@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script async src="https://pay.google.com/gp/p/js/pay.js"></script>
 </head>
 <body>
   <header class="topbar">
@@ -49,6 +50,14 @@
           </div>
           <div class="status" id="goals-status" aria-live="polite"></div>
         </form>
+
+        <h3 style="margin-top:18px;">Add Money</h3>
+        <div class="row">
+          <label for="add-amount">Amount (USD)</label>
+          <input type="number" id="add-amount" min="1" step="0.01" placeholder="e.g., 25.00">
+        </div>
+        <div id="gpay-container" class="row" style="margin-top:8px;"></div>
+        <div class="status" id="gpay-status" aria-live="polite" style="margin-top:6px;"></div>
       </aside>
 
       <section class="card content">
@@ -112,6 +121,116 @@
       const kLast = document.getElementById('kpi-last-month');
       const kTrend = document.getElementById('kpi-trend');
       const ul = document.getElementById('month-expenses');
+            // Google Pay UI
+            const gpayContainer = document.getElementById('gpay-container');
+      const gpayStatus = document.getElementById('gpay-status');
+      const addAmount = document.getElementById('add-amount');
+      let paymentsClient = null;
+
+      const baseCardPaymentMethod = {
+        type: 'CARD',
+        parameters: {
+          allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
+          allowedCardNetworks: ['AMEX', 'DISCOVER', 'INTERAC', 'JCB', 'MASTERCARD', 'VISA'],
+          billingAddressRequired: false
+        }
+      };
+
+      const tokenizationSpec = {
+        type: 'PAYMENT_GATEWAY',
+        parameters: {
+          gateway: 'example',
+          gatewayMerchantId: 'exampleGatewayMerchantId'
+        }
+      };
+
+      function getIsReadyToPayRequest() {
+        return {
+          apiVersion: 2,
+          apiVersionMinor: 0,
+          allowedPaymentMethods: [baseCardPaymentMethod]
+        };
+      }
+
+      function getPaymentDataRequest(amount) {
+        return {
+          apiVersion: 2,
+          apiVersionMinor: 0,
+          allowedPaymentMethods: [{
+            ...baseCardPaymentMethod,
+            tokenizationSpecification: tokenizationSpec
+          }],
+          transactionInfo: {
+            totalPriceStatus: 'FINAL',
+            totalPrice: Number(amount).toFixed(2),
+            currencyCode: 'USD',
+            countryCode: 'US'
+          },
+          merchantInfo: {
+            merchantId: '01234567890123456789', // TEST placeholder
+            merchantName: 'Demo Merchant'
+          }
+        };
+      }
+
+      function onGooglePayLoaded() {
+        try {
+          paymentsClient = new google.payments.api.PaymentsClient({ environment: 'TEST' });
+          paymentsClient.isReadyToPay(getIsReadyToPayRequest()).then(res => {
+            if (res.result) {
+              const button = paymentsClient.createButton({
+                onClick: onGooglePayButtonClicked,
+                buttonType: 'pay',
+                buttonColor: 'black'
+              });
+              gpayContainer.innerHTML = '';
+              gpayContainer.appendChild(button);
+              gpayStatus.textContent = 'Google Pay is ready (TEST).';
+            } else {
+              gpayStatus.textContent = 'Google Pay not available on this device/browser.';
+            }
+          }).catch(() => {
+            gpayStatus.textContent = 'Failed to initialize Google Pay.';
+          });
+        } catch (e) {
+          gpayStatus.textContent = 'Google Pay script not loaded yet.';
+        }
+      }
+
+      async function onGooglePayButtonClicked() {
+        const amt = Number(addAmount  .value || 0);
+        if (!(amt > 0)) { gpayStatus.textContent = 'Enter a valid amount.'; return; }
+        try {
+          const paymentData = await paymentsClient.loadPaymentData(getPaymentDataRequest(amt));
+          // Normally send paymentData.paymentMethodData.token to your server to charge.
+          // For TEST demo, we treat it as success and credit the balance locally.
+          const current = loadBalance();
+          const next = current + amt;
+          saveBalance(next);
+          gpayStatus.textContent = `Added ${fmt(amt)} via Google Pay (TEST).`;
+          render();
+        } catch (err) {
+          if (err && err.statusCode === 'CANCELED') {
+            gpayStatus.textContent = 'Payment canceled.';
+          } else {
+            gpayStatus.textContent = 'Payment failed. Try again.';
+          }
+        }
+      }
+
+      // Load GPay when its script is ready
+      if (window.google && window.google.payments && window.google.payments.api) {
+        onGooglePayLoaded();
+      } else {
+        // Retry once the script tag finishes loading
+        const check = setInterval(() => {
+          if (window.google && window.google.payments && window.google.payments.api) {
+            clearInterval(check);
+            onGooglePayLoaded();
+          }
+        }, 300);
+        setTimeout(() => clearInterval(check), 10000);
+      }
 
       function render() {
         const g = loadGoals();
@@ -174,3 +293,4 @@
   </script>
 </body>
 </html>
+
