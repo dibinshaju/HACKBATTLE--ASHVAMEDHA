@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <main class="container">
+    <div class="mobile-graph" aria-hidden="true"></div>
+    <section class="card" aria-labelledby="login-title">
+      <header class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="3" width="18" height="18" rx="4" fill="#3d8bfd"/>
+            <path d="M7 14c2.2-3 4.8-5 8-6" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="15" cy="8" r="1.5" fill="white"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1 id="login-title" class="app-title">Finance Tracker</h1>
+          <p class="subtitle">Track budgets, visualize spend, and hit your goals.</p>
+        </div>
+      </header>
+
+      <div class="oauth">
+        <button type="button" class="btn oauth-btn google" id="oauth-google" aria-label="Continue with Google">
+          <span class="icon" aria-hidden="true">G</span>
+          <span>Continue with Google</span>
+        </button>
+        <button type="button" class="btn oauth-btn microsoft" id="oauth-microsoft" aria-label="Continue with Microsoft">
+          <span class="icon" aria-hidden="true"></span>
+          <span>Continue with Microsoft</span>
+        </button>
+      </div>
+
+      <div class="divider" role="separator" aria-label="or">
+        <span>or</span>
+      </div>
+
+      <form id="login-form" novalidate>
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" autocomplete="username" inputmode="email" required aria-describedby="email-hint email-error">
+          <p class="hint" id="email-hint">Use your work email address.</p>
+          <p class="error" id="email-error" role="alert" aria-live="polite"></p>
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="password" name="password" autocomplete="current-password" minlength="8" required aria-describedby="password-hint password-error">
+            <button type="button" id="toggle-password" class="ghost" aria-pressed="false" aria-controls="password">Show</button>
+          </div>
+          <p class="hint" id="password-hint">At least 8 characters.</p>
+          <p class="error" id="password-error" role="alert" aria-live="polite"></p>
+          <div class="strength" aria-live="polite" id="password-strength" hidden>
+            <div class="bars" aria-hidden="true">
+              <span></span><span></span><span></span><span></span>
+            </div>
+            <span class="label" id="strength-label"></span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <label class="checkbox">
+            <input type="checkbox" id="remember" name="remember">
+            <span>Remember me</span>
+          </label>
+          <button type="submit" id="submit" class="btn primary">Sign in</button>
+        </div>
+
+        <div class="links">
+          <a href="#" id="forgot">Forgot password?</a>
+          <a href="#" id="create-account">Create account</a>
+        </div>
+
+        <div class="status" id="form-status" aria-live="polite"></div>
+      </form>
+    </section>
+  </main>
+
+  <script src="app.js" defer></script>
+  <noscript>
+    JavaScript is disabled. The form will submit without client-side validation.
+  </noscript>
+</body>
+</html>
+
+
