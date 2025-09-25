@@ -25,7 +25,7 @@ body {
   backdrop-filter: blur(8px);
 }
 .topbar .brand { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; }
-.topbar nav { display: inline-flex; gap: 16px; }
+.topbar nav { display: inline-flex; gap: 16px; flex-wrap: wrap; }
 .topbar a { color: var(--muted); text-decoration: none; font-weight: 500; }
 .topbar .logout { margin-left: 8px; background: #1b2446; color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; cursor: pointer; }
 .topbar .logout:hover { background: #223060; }
@@ -56,6 +56,17 @@ body {
 .charts { display: grid; grid-template-columns: 1fr 1.4fr; gap: 14px; margin-top: 16px; }
 
 @media (max-width: 900px) { .charts { grid-template-columns: 1fr; } .summary { grid-template-columns: 1fr; } }
+
+/* Mobile adjustments */
+@media (max-width: 640px) {
+  .topbar { padding: 10px 12px; }
+  .topbar nav { gap: 10px; }
+  .topbar .lang, .topbar .currency { display: none; }
+  .container { padding: 12px; }
+  .value { font-size: 20px; }
+  canvas { width: 100% !important; height: auto !important; }
+  .expense-list li { grid-template-columns: auto 1fr auto; }
+}
 
 /* Goals layout */
 .goals-layout { display: grid; grid-template-columns: 280px 1fr; gap: 14px; }

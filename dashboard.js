@@ -251,6 +251,18 @@
     const pieCanvas = document.getElementById('pieChart');
     const lineCanvas = document.getElementById('lineChart');
 
+    // Ensure canvas sizes match container for responsiveness
+    [pieCanvas, lineCanvas].forEach((c) => {
+      if (!c) return;
+      const parent = c.parentElement;
+      if (parent) {
+        const width = parent.clientWidth - 20; // padding safety
+        const ratio = c.getAttribute('height') ? (Number(c.getAttribute('height')) / Number(c.getAttribute('width') || width)) : (260 / 400);
+        c.width = Math.max(300, width);
+        c.height = Math.round(c.width * ratio);
+      }
+    });
+
     // Build monthly totals for last 12 months and per-expense points
     const now = new Date();
     const months = [];
@@ -369,6 +381,27 @@
     // Initial render
     updateChartsFromExpenses();
     renderExpenseList(loadExpenses());
+
+    // Re-render charts on resize for responsiveness (debounced)
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        updateChartsFromExpenses();
+      }, 120);
+    });
+
+    // Show/hide bank connect banner based on stored connection flag
+    const bankCard = document.getElementById('bank-connect-card');
+    if (bankCard) {
+      let connected = false;
+      try { connected = localStorage.getItem('ft_gpay_connected') === 'true'; } catch (_) {}
+      bankCard.hidden = !!connected;
+      // If connected, optionally render a success state once
+      if (connected) {
+        // no-op for now; we simply hide the CTA card
+      }
+    }
 
     // Form handling
     const form = document.getElementById('expense-form');

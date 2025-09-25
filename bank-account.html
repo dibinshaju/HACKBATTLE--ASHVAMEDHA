@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bank Account Setup • Finance Tracker</title>
+  <link rel="stylesheet" href="styles.css">
+ 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <main class="container">
+    <div class="mobile-graph" aria-hidden="true"></div>
+    <section class="card" aria-labelledby="bank-title">
+      <header class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="3" width="18" height="18" rx="4" fill="#3d8bfd"/>
+            <path d="M7 14c2.2-3 4.8-5 8-6" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="15" cy="8" r="1.5" fill="white"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1 id="bank-title" class="app-title">Bank Account Setup</h1>
+          <p class="subtitle" id="subtitle">Connect your bank account for seamless GPay integration</p>
+        </div>
+        <div class="lang">
+          <label for="lang-select" id="lang-label">Language</label>
+          <select id="lang-select" aria-labelledby="lang-label">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+          </select>
+        </div>
+      </header>
+
+      <div class="gpay-section">
+        <div class="gpay-header">
+          <div class="gpay-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="4" width="20" height="16" rx="2" fill="#4285F4"/>
+              <path d="M8 12h8M8 8h4M8 16h6" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h2>Google Pay Integration</h2>
+          <p>Securely connect your bank account to enable Google Pay transactions</p>
+        </div>
+      </div>
+
+      <form id="bank-form" novalidate>
+        <div class="field">
+          <label for="bank-name" id="label-bank-name">Bank Name</label>
+          <select id="bank-name" name="bank-name" required aria-describedby="bank-name-hint">
+            <option value="">Select your bank</option>
+            <option value="hdfc">HDFC Bank</option>
+            <option value="icici">ICICI Bank</option>
+            <option value="sbi">State Bank of India</option>
+            <option value="axis">Axis Bank</option>
+            <option value="kotak">Kotak Mahindra Bank</option>
+            <option value="pnb">Punjab National Bank</option>
+            <option value="bob">Bank of Baroda</option>
+            <option value="other">Other</option>
+          </select>
+          <p class="hint" id="bank-name-hint">Choose your primary bank for GPay integration</p>
+          <p class="error" id="bank-name-error" role="alert" aria-live="polite"></p>
+        </div>
+
+        <div class="field">
+          <label for="account-number" id="label-account-number">Account Number</label>
+          <input type="text" id="account-number" name="account-number" pattern="[0-9]{9,18}" required aria-describedby="account-number-hint account-number-error" placeholder="Enter your account number">
+          <p class="hint" id="account-number-hint">Enter your 9-18 digit account number</p>
+          <p class="error" id="account-number-error" role="alert" aria-live="polite"></p>
+        </div>
+
+        <div class="field">
+          <label for="ifsc-code" id="label-ifsc-code">IFSC Code</label>
+          <input type="text" id="ifsc-code" name="ifsc-code" pattern="[A-Z]{4}0[A-Z0-9]{6}" required aria-describedby="ifsc-code-hint ifsc-code-error" placeholder="e.g., HDFC0001234">
+          <p class="hint" id="ifsc-code-hint">Enter your bank's IFSC code (e.g., HDFC0001234)</p>
+          <p class="error" id="ifsc-code-error" role="alert" aria-live="polite"></p>
+        </div>
+
+        <div class="field">
+          <label for="account-holder" id="label-account-holder">Account Holder Name</label>
+          <input type="text" id="account-holder" name="account-holder" required aria-describedby="account-holder-hint account-holder-error" placeholder="Enter account holder name">
+          <p class="hint" id="account-holder-hint">Name as it appears on your bank account</p>
+          <p class="error" id="account-holder-error" role="alert" aria-live="polite"></p>
+        </div>
+
+        <div class="field">
+          <label for="mobile-number" id="label-mobile-number">Mobile Number</label>
+          <input type="tel" id="mobile-number" name="mobile-number" pattern="[0-9]{10}" required aria-describedby="mobile-number-hint mobile-number-error" placeholder="Enter 10-digit mobile number">
+          <p class="hint" id="mobile-number-hint">Mobile number linked to your bank account</p>
+          <p class="error" id="mobile-number-error" role="alert" aria-live="polite"></p>
+        </div>
+
+        <div class="field">
+          <label for="email" id="label-email">Email Address</label>
+          <input type="email" id="email" name="email" required aria-describedby="email-hint email-error" placeholder="Enter your email address">
+          <p class="hint" id="email-hint">Email address for notifications and verification</p>
+          <p class="error" id="email-error" role="alert" aria-live="polite"></p>
+        </div>
+
+        <div class="field">
+          <label for="upi-id" id="label-upi-id">UPI ID (Optional)</label>
+          <input type="text" id="upi-id" name="upi-id" aria-describedby="upi-id-hint upi-id-error" placeholder="e.g., yourname@paytm">
+          <p class="hint" id="upi-id-hint">Your existing UPI ID for quick setup</p>
+          <p class="error" id="upi-id-error" role="alert" aria-live="polite"></p>
+        </div>
+
+        <div class="actions">
+          <label class="checkbox">
+            <input type="checkbox" id="terms" name="terms" required>
+            <span>I agree to the <a href="#" class="link">Terms of Service</a> and <a href="#" class="link">Privacy Policy</a></span>
+          </label>
+          <button type="submit" id="submit" class="btn primary">Connect Bank Account</button>
+        </div>
+
+        <div class="status" id="form-status" aria-live="polite"></div>
+      </form>
+
+      <div class="security-note">
+        <div class="security-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" fill="#4CAF50"/>
+            <path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <p>Your bank details are encrypted and securely stored. We use bank-grade security to protect your information.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="bank-account.js" defer></script>
+  <noscript>
+    JavaScript is disabled. The form will submit without client-side validation.
+  </noscript>
+</body>
+</html>

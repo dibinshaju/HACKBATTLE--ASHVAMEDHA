@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Finance Report • Finance Tracker</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { background: #f3f4f6; }
+    .report { max-width: 960px; margin: 24px auto; background: #fff; border-radius: 12px; padding: 24px; }
+    .report h1 { margin: 0 0 8px 0; }
+    .meta { color: #6c757d; margin-bottom: 16px; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .card { border: 1px solid #e9ecef; border-radius: 8px; padding: 16px; background: #f8f9fa; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    th, td { text-align: left; padding: 8px; border-bottom: 1px solid #e9ecef; }
+    .actions { margin: 16px 0; display: flex; gap: 8px; }
+    .btn { padding: 8px 12px; border-radius: 8px; border: 1px solid #cfd4da; background: #fff; cursor: pointer; }
+    .btn.primary { background: #3d8bfd; color: #fff; border-color: #3d8bfd; }
+    @media print { .actions { display: none; } body { background: #fff; } .report { box-shadow: none; margin: 0; width: auto; } }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="prefetch" href="dashboard.html">
+  <link rel="preload" href="report.js" as="script">
+  <link rel="preload" href="dashboard.css" as="style">
+</head>
+<body>
+  <main class="report">
+    <header>
+      <h1>Finance Performance Report</h1>
+      <div class="meta" id="meta">Generated on <span id="gen-date"></span></div>
+      <div class="actions">
+        <button class="btn" id="back">Back to Dashboard</button>
+        <button class="btn primary" id="print">Download PDF</button>
+      </div>
+    </header>
+
+    <section class="grid">
+      <div class="card">
+        <h3>Total Expenses (12 mo)</h3>
+        <div id="tot-exp">$0.00</div>
+      </div>
+      <div class="card">
+        <h3>Average Monthly Spend</h3>
+        <div id="avg-exp">$0.00</div>
+      </div>
+      <div class="card">
+        <h3>Top Category</h3>
+        <div id="top-cat">—</div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:16px">
+      <h3>Spend by Category</h3>
+      <table>
+        <thead><tr><th>Category</th><th>Amount</th><th>Share</th></tr></thead>
+        <tbody id="by-cat"></tbody>
+      </table>
+    </section>
+
+    <section class="card" style="margin-top:16px">
+      <h3>Recent Expenses</h3>
+      <table>
+        <thead><tr><th>Date</th><th>Category</th><th>Note</th><th>Amount</th></tr></thead>
+        <tbody id="recent"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="report.js" defer></script>
+</body>
+</html>
+
+

@@ -6,7 +6,7 @@
   <title>Dashboard • Finance Tracker</title>
   <link rel="stylesheet" href="dashboard.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="prefetch" href="account (1).html">
+  
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -20,7 +20,7 @@
       <a href="dashboard.html" aria-current="page" id="nav-dashboard">Dashboard</a>
       <a href="#" id="nav-accounts">Accounts</a>
       <a href="goals.html" id="nav-budgets">Budgets</a>
-      <a href="#" id="nav-reports">Reports</a>
+      <a href="report.html" id="nav-reports">Reports</a>
       <div class="lang">
         <label for="db-lang" id="db-lang-label">Language</label>
         <select id="db-lang">
@@ -40,6 +40,21 @@
   </header>
 
   <main class="container">
+    <section class="card" id="bank-connect-card" aria-live="polite" hidden>
+      <div class="gpay-header">
+        <div class="gpay-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="4" width="20" height="16" rx="2" fill="#4285F4"/>
+            <path d="M8 12h8M8 8h4M8 16h6" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="bank-copy">
+          <h3 id="bank-cta-title">Connect your bank to enable GPay</h3>
+          <p id="bank-cta-desc">Securely link your account to track spends and pay seamlessly.</p>
+        </div>
+        <a class="btn primary" id="bank-cta-btn" href="bank-account.html">Connect Bank</a>
+      </div>
+    </section>
     <section class="summary">
       <div class="card">
         <h3 id="t-balance">Total Balance</h3>

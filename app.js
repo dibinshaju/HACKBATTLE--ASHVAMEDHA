@@ -162,6 +162,22 @@
     togglePassword.textContent = isHidden ? t('hide') : t('show');
   });
 
+  // OAuth buttons (simulate Google/Microsoft sign-in)
+  const googleBtn = document.getElementById('oauth-google');
+  const msBtn = document.getElementById('oauth-microsoft');
+  function handleOAuth(provider) {
+    try { localStorage.setItem('ft_auth', 'signed_in'); } catch (_) {}
+    try { localStorage.setItem('ft_auth_provider', provider); } catch (_) {}
+    if (formStatus) formStatus.textContent = t('signing_in');
+    setTimeout(() => { window.location.href = 'dashboard.html'; }, 500);
+  }
+  if (googleBtn) {
+    googleBtn.addEventListener('click', () => handleOAuth('google'));
+  }
+  if (msBtn) {
+    msBtn.addEventListener('click', () => handleOAuth('microsoft'));
+  }
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const valid = updateSubmitState();
@@ -212,4 +228,3 @@
 })();
 
 
-p
